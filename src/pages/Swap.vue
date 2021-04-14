@@ -20,13 +20,6 @@
                     handleAmountChange(value);
                 }"
             />
-            <GasReimbursement
-                class="reimbursement-message"
-                :address-in="assetInAddressInput"
-                :address-out="assetOutAddressInput"
-                :pools="pools"
-                :swaps="swaps"
-            />
             <SwapButton
                 class="swap-button"
                 :address-in="assetInAddressInput"
@@ -80,7 +73,6 @@ import Routing from '@/components/swap/Routing.vue';
 import Settings from '@/components/Settings.vue';
 import SwapButton from '@/components/swap/Button.vue';
 import SwapPair from '@/components/swap/Pair.vue';
-import GasReimbursement from '@/components/swap/GasReimbursement.vue';
 import { setGoal } from '@/utils/fathom';
 
 // eslint-disable-next-line no-undef
@@ -99,7 +91,6 @@ export default defineComponent({
         Settings,
         SwapButton,
         SwapPair,
-        GasReimbursement,
     },
     setup() {
         let sor: SOR | undefined = undefined;

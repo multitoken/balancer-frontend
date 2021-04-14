@@ -9,7 +9,7 @@
                     class="logo"
                     :title="'brand'"
                 />
-                <span class="title">Balancer</span>
+                <span class="title">Multitoken</span>
             </router-link>
             <a
                 v-if="isDev"
@@ -29,7 +29,7 @@
                 </div>
                 <a
                     class="link"
-                    href="https://pools.balancer.exchange"
+                    href="https://pools.multitoken.finance/"
                     target="_blank"
                 >
                     Invest
@@ -112,7 +112,7 @@ export default defineComponent({
 
 .header-left {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .header-right {
@@ -128,12 +128,12 @@ a {
 .brand {
     margin-left: 20px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .logo {
-    height: 22px;
-    width: 27px;
+    height: 32px;
+    width: 40px;
 }
 
 .title {

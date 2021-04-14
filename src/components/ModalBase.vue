@@ -124,6 +124,7 @@ export default defineComponent({
 
 .close-icon {
     width: 16px;
+    cursor: pointer;
 }
 
 .body {
