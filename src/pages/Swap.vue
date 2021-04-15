@@ -416,7 +416,6 @@ export default defineComponent({
                     store.dispatch('ui/notify', {
                         text: `${text} failed`,
                         type: 'warning',
-                        link: 'https://help.balancer.finance',
                     });
                 }
                 return;
