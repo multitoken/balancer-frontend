@@ -36,6 +36,10 @@
                 </a>
             </div>
         </div>
+        <div class="header-middle">
+            <span>Alpha version</span>
+            <span>Kovan network</span>
+        </div>
         <div class="header-right">
             <Icon
                 class="mode-icon"
@@ -115,6 +119,20 @@ export default defineComponent({
     align-items: center;
 }
 
+.header-middle {
+    position: absolute;
+    left: calc(50% - 60px);
+    
+    width: 120px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: #ffa600;
+}
+
 .header-right {
     display: flex;
     align-items: center;
@@ -174,6 +192,10 @@ a {
 }
 
 @media only screen and (max-width: 768px) {
+    .header-middle {
+        left: 70px;
+    }
+
     .brand {
         margin-left: 16px;
     }
@@ -182,6 +204,15 @@ a {
     .commit-label,
     .link {
         display: none;
+    }
+}
+
+@media (max-width: 416px) {
+    .header-middle {
+        position: absolute;
+        bottom: 180px;
+        right: 20px;
+        left: unset;
     }
 }
 </style>
