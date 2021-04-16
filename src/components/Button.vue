@@ -55,8 +55,8 @@ button:hover {
 }
 
 button.primary {
-    background: linear-gradient(185deg, #f0f 0%, #00f 100%);
-    color: #fff;
+    background: linear-gradient(185deg, #98ffcc 0%, #98ff98 100%);
+    color: var(--background-secondary);
 }
 
 button.primary:hover {

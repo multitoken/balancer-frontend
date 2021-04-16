@@ -246,6 +246,7 @@ export default defineComponent({
 
 .amount {
     width: 100%;
+    padding-top: 7px;
 }
 
 .input-wrapper {
