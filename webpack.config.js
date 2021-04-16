@@ -72,7 +72,7 @@ module.exports =
         }),
         new HtmlWebpackPlugin({
             template: 'public/index.html',
-            favicon: 'public/favicon.ico',
+            favicon: 'public/favicon.ico'
         }),
         new VueLoaderPlugin(),
     ],
