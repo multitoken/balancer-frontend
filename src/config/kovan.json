@@ -11,7 +11,7 @@
         "bActions": "0xDE56cBc4E6eDBa47Fe6cfa179B6f185CCfa4C47f",
         "dsProxyRegistry": "0x130767E0cf05469CF11Fa3fcf270dfC1f52b9072",
         "exchangeProxy": "0xc2E3aa4a9D39592741bFaf5A741BDB023e69516E",
-        "weth": "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
+        "weth": "0xcd2E5d165A24176De9b23f248D29B7583F00d04F",
         "multicall": "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A"
     },
     "connectors": {
