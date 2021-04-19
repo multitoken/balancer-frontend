@@ -1,4 +1,4 @@
-import tokenlist from 'assets/assets/tokens.json';
+import tokenlist from '@multitoken/assets/assets/tokens.json';
 
 import config, { AssetMetadata } from '@/config';
 
