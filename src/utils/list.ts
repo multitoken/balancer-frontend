@@ -1,4 +1,4 @@
-import tokenlist from '@balancer-labs/assets/generated/listed.tokenlist.json';
+import tokenlist from '@multitoken/assets/assets/tokens.json';
 
 import config, { AssetMetadata } from '@/config';
 
