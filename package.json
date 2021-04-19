@@ -30,7 +30,7 @@
     "@snapshot-labs/lock": "github:snapshot-labs/lock#a3694bb6b6e615968ee6e04e9a97007eace18c28",
     "@vueuse/core": "^4.0.0-beta.30",
     "@walletconnect/web3-provider": "^1.2.2",
-    "assets": "git+ssh://git@github.com/multitoken/assets.git#4bd92a947517b7024811169e4deebc4cdaac94a8",
+    "assets": "git+https://git@github.com/multitoken/assets.git#4bd92a947517b7024811169e4deebc4cdaac94a8",
     "bignumber.js": "^9.0.1",
     "dotenv-webpack": "^2.0.0",
     "ethcall": "^3.0.0",
