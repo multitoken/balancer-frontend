@@ -4,11 +4,13 @@ import { ErrorCode } from '@ethersproject/logger';
 import { Web3Provider } from '@ethersproject/providers';
 import BigNumber from 'bignumber.js';
 
-import { logRevertedTx } from '@/utils/helpers';
+import { getEtherscanLink, logRevertedTx, scale } from '@/utils/helpers';
 import config from '@/config';
 
 import ERC20Abi from '../abi/ERC20.json';
 import WethAbi from '../abi/Weth.json';
+import Minter from '../abi/Minter.json';
+import store from '../store';
 
 export default class Helper {
     static async unlock(
@@ -68,5 +70,49 @@ export default class Helper {
     ): Promise<any> {
         const gasPrice = await provider.getGasPrice();
         return gasPrice.toString();
+    }
+
+    static async mintToken(
+        provider: Web3Provider,
+        address: string,
+        amount: string,
+    ): Promise<any> {
+        const mintProxyContract = new Contract(address, Minter['abi'], provider.getSigner());
+        const name = await mintProxyContract.name();
+        const symbol = await mintProxyContract.symbol();
+
+        const decimals = await mintProxyContract.decimals();
+        const amountBigNumber = new BigNumber(amount);
+        const parsedUnits = scale(amountBigNumber, decimals);
+        const account = await provider.getSigner().getAddress();
+
+        try {
+            const transaction = await mintProxyContract.mint(account, parsedUnits.toString());
+            const title = `Mint ${name}`;
+            store.dispatch('account/saveTransaction', { transaction, title });
+    
+            const transactionReceipt = await provider.waitForTransaction(transaction.hash, 1);
+            store.dispatch('account/saveMinedTransaction', {
+                receipt: transactionReceipt,
+                timestamp: Date.now(),
+            });
+    
+            await store.dispatch('getBalances');
+
+            const text = `${amount} ${symbol} minted`;
+    
+            const type = transactionReceipt.status === 1
+                ? 'success'
+                : 'error';
+            const link = getEtherscanLink(transactionReceipt.transactionHash);
+            store.dispatch('ui/notify', {
+                text,
+                type,
+                link,
+            });
+        } catch (err) {
+            console.log(err.message);
+            console.log(`${name} didn't mint ${amount} ${symbol} to ${account}`);
+        }
     }
 }

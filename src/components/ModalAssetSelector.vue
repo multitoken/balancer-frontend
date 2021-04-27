@@ -120,7 +120,7 @@ export default defineComponent({
             return assets.value
                 .filter(asset => {
                     // Filter by "hidden" prop
-                    if (props.hidden.includes(asset.address)) {
+                    if (props && props.hidden.includes(asset.address)) {
                         return false;
                     }
                     // Filter by query

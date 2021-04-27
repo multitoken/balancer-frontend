@@ -78,6 +78,7 @@ export default defineComponent({
     --border: #e5e5e5;
     --text-primary: #21222c;
     --text-secondary: #718b98;
+    --text-hightlight: #98ff98;
     --success: #21b66f;
     --info: #7685d5;
     --warning: #ff9a1a;
