@@ -1,7 +1,10 @@
 var path = require('path');
 var express = require('express');
 const https = require('https');
-const { readSync } = require('fs');
+const GARAPH_PATH = '/subgraphs/name/cron-md/multitoken';
+const QUERY = "query { pools (where: {active: true, tokensCount_gt: 1, finalized: true, tokensList_not: []}, first: 20, skip: 0, orderBy: \"liquidity\", orderDirection: \"desc\") { id publicSwap finalized crp rights swapFee totalWeight totalShares totalSwapVolume liquidity tokensList swapsCount tokens (orderBy: \"denormWeight\", orderDirection: \"desc\") { id address balance decimals symbol denormWeight } swaps (first: 1, orderBy: \"timestamp\", orderDirection: \"desc\", where: {timestamp_lt: 1618488000}) { poolTotalSwapVolume } } }";
+const NOT_FINALIZED_QUERY = "query { pools (where: {active: true, tokensCount_gt: 1, tokensList_not: []}, first: 20, skip: 0, orderBy: \"liquidity\", orderDirection: \"desc\") { id publicSwap finalized crp rights swapFee totalWeight totalShares totalSwapVolume liquidity tokensList swapsCount tokens (orderBy: \"denormWeight\", orderDirection: \"desc\") { id address balance decimals symbol denormWeight } swaps (first: 1, orderBy: \"timestamp\", orderDirection: \"desc\", where: {timestamp_lt: 1618488000}) { poolTotalSwapVolume } } }";
+
 
 var app = express();
 
@@ -22,47 +25,58 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.set('port', process.env.PORT || 8080);
 
 
+function queryGraph(query) {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify({
+            "query": query
+        });
+        
+        const options = {
+            hostname: 'api.thegraph.com',
+            port: 443,
+            path: GARAPH_PATH,
+
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': data.length,
+              'Accept': 'application/json',
+    
+            }
+        };
+        
+        const treq = https.request(options, tres => {
+          const chunks = [];
+        
+          tres.on('data', d => {
+            chunks.push(Buffer.from(d));
+          })
+          tres.on('end', () => {
+              let data = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+              resolve(JSON.stringify(data['data']));
+          })
+        })
+        
+        treq.on('error', error => {
+          console.error(error);
+        })
+        
+        treq.write(data);
+        treq.end();
+    });
+}
+
 app.get('/pools', (req, res) => {
-    const data = JSON.stringify({
-        // "query": "query { pools (where: {active: true, tokensCount_gt: 1, finalized: true, tokensList_not: []}, first: 20, skip: 0, orderBy: \"liquidity\", orderDirection: \"desc\") { id publicSwap finalized crp rights swapFee totalWeight totalShares totalSwapVolume liquidity tokensList swapsCount tokens (orderBy: \"denormWeight\", orderDirection: \"desc\") { id address balance decimals symbol denormWeight } swaps (first: 1, orderBy: \"timestamp\", orderDirection: \"desc\", where: {timestamp_lt: 1618488000}) { poolTotalSwapVolume } } }"
-        "query": "query { pools (where: {active: true, tokensCount_gt: 1, tokensList_not: []}, first: 20, skip: 0, orderBy: \"liquidity\", orderDirection: \"desc\") { id publicSwap finalized crp rights swapFee totalWeight totalShares totalSwapVolume liquidity tokensList swapsCount tokens (orderBy: \"denormWeight\", orderDirection: \"desc\") { id address balance decimals symbol denormWeight } swaps (first: 1, orderBy: \"timestamp\", orderDirection: \"desc\", where: {timestamp_lt: 1618488000}) { poolTotalSwapVolume } } }"
-      });
-    
-    const options = {
-        hostname: 'api.thegraph.com',
-        port: 443,
-        path: '/subgraphs/name/cron-md/multitoken',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': data.length,
-          'Accept': 'application/json',
+    queryGraph(QUERY).then((data) => {
+        res.end(data);
+    });
+});
 
-        }
-      }
-    
-    const treq = https.request(options, tres => {
-      console.log(`statusCode: ${res.statusCode}`)
-
-      const chunks = [];
-    
-      tres.on('data', d => {
-        chunks.push(Buffer.from(d))
-        // res.write(d)
-      })
-      tres.on('end', () => {
-          let data = JSON.parse(Buffer.concat(chunks).toString('utf8'))
-          res.end(JSON.stringify(data['data']))
-      })
-    })
-    
-    treq.on('error', error => {
-      console.error(error)
-    })
-    
-    treq.write(data)
-    treq.end()
-})
+app.get('/not-finalizesd-pools', (req, res) => {
+    queryGraph(NOT_FINALIZED_QUERY).then((data) => {
+        res.end(data);
+    });
+});
 
 var server = app.listen(app.get('port'), function() {
   console.log('listening on port ', server.address().port);
