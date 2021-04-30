@@ -8,14 +8,14 @@
                 <div
                     class="header-text"
                 >
-                    <div>
+                    <div class="header-toggle-option header-toggle-option-selected">
                         Swap
                     </div>
                     <div
-                        class="header-text-secondary"
+                        class="header-text-secondary header-toggle-option"
                         @click="toggleSwapping"
                     >
-                        Get
+                        Get test tokens
                     </div>
                 </div>
                 <Settings />
@@ -69,14 +69,14 @@
             <div
                 class="header header-text"
             >
-                <div>
-                    Get test tokens
-                </div>
                 <div
-                    class="header-text-secondary"
+                    class="header-text-secondary header-toggle-option"
                     @click="toggleSwapping"
                 >
                     Swap
+                </div>
+                <div class="header-toggle-option header-toggle-option-selected">
+                    Get test tokens
                 </div>
             </div>
             <AssetInput
@@ -659,13 +659,28 @@ export default defineComponent({
 
 .header-text {
     display: flex;
+
     font-size: var(--font-size-header);
+
+    background: var(--background-control);
+
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-medium);
+}
+
+.header-toggle-option {
+    padding: 5px 10px;
+}
+
+.header-toggle-option-selected {
+    background: var(--background-hightlight);
+
+    border-radius: var(--border-radius-medium);
 }
 
 .header-text-secondary {
     color: var(--text-secondary);
     text-decoration: none;
-    margin-left: 15px;
     cursor: pointer;
 }
 

@@ -99,6 +99,7 @@ export default defineComponent({
     --background-secondary: #21222c;
     --background-control: #1f2029;
     --background-hover: #20222c;
+    --background-hightlight: #243d24;
     --border: #333;
     --text-primary: #fff;
     --text-secondary: #98aab4;
