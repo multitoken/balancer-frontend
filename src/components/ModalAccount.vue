@@ -99,7 +99,7 @@ import { useStore } from 'vuex';
 
 import { RootState } from '@/store';
 import { scale } from '@/utils/helpers';
-import { formatAddress, getAccountLink } from '@/utils/helpers';
+import { formatAddress, getAccountLink, isAddress } from '@/utils/helpers';
 import config from '@/config';
 
 import AssetIcon from '@/components/AssetIcon.vue';
@@ -134,6 +134,9 @@ export default defineComponent({
             const { balances } = store.state.account;
             return Object.keys(balances)
                 .map(assetAddress => {
+                    if (!isAddress(assetAddress)) {
+                        return;
+                    }
                     const assetMetadata = metadata[assetAddress];
                     const { address, name, symbol, decimals } = assetMetadata;
                     const balance = balances[address] || '0';
@@ -149,7 +152,7 @@ export default defineComponent({
                         amount,
                     };
                 }).
-                filter(balance => balance.amount !== '');
+                filter(balance => { if (balance) {balance.amount !== '';} });
         });
 
         function copyAddress(): void {

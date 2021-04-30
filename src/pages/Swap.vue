@@ -1,9 +1,22 @@
 <template>
-    <div class="page">
+    <div
+        v-if="swapping"
+        class="page"
+    >
         <div class="pair">
             <div class="header">
-                <div class="header-text">
-                    Swap
+                <div
+                    class="header-text"
+                >
+                    <div class="header-toggle-option header-toggle-option-selected">
+                        Swap
+                    </div>
+                    <div
+                        class="header-text-secondary header-toggle-option"
+                        @click="toggleSwapping"
+                    >
+                        Get test tokens
+                    </div>
                 </div>
                 <Settings />
             </div>
@@ -40,6 +53,49 @@
                 class="routing"
             />
         </div>
+
+        <ModalAssetSelector
+            :open="isModalOpen"
+            :hidden="[assetInAddressInput, assetOutAddressInput]"
+            @select="handleAssetSelect"
+        />
+    </div>
+
+    <div
+        v-else
+        class="page"
+    >
+        <div class="minting">
+            <div
+                class="header header-text"
+            >
+                <div
+                    class="header-text-secondary header-toggle-option"
+                    @click="toggleSwapping"
+                >
+                    Swap
+                </div>
+                <div class="header-toggle-option header-toggle-option-selected">
+                    Get test tokens
+                </div>
+            </div>
+            <AssetInput
+                :address="assetMintAddress"
+                :amount="assetMintAmount"
+                :modal-key="'mint'"
+                @change="value => {
+                    handleMintAmountChange(value);
+                }"
+            />
+            <Button
+                :text="'Mint'"
+                :primary="true"
+                :loading="transactionPending"
+                :disabled="mintButtonDisabled"
+                class="swap-button"
+                @click="mintToken"
+            />
+        </div>
         <ModalAssetSelector
             :open="isModalOpen"
             :hidden="[assetInAddressInput, assetOutAddressInput]"
@@ -73,6 +129,8 @@ import Routing from '@/components/swap/Routing.vue';
 import Settings from '@/components/Settings.vue';
 import SwapButton from '@/components/swap/Button.vue';
 import SwapPair from '@/components/swap/Pair.vue';
+import Button from '@/components/Button.vue';
+import AssetInput from '@/components/AssetInput.vue';
 import { setGoal } from '@/utils/fathom';
 
 // eslint-disable-next-line no-undef
@@ -91,6 +149,8 @@ export default defineComponent({
         Settings,
         SwapButton,
         SwapPair,
+        AssetInput,
+        Button,
     },
     setup() {
         let sor: SOR | undefined = undefined;
@@ -98,11 +158,15 @@ export default defineComponent({
         const router = useRouter();
         const store = useStore<RootState>();
 
+        const swapping = ref(true);
+
         const isExactIn = ref(true);
         const assetInAddressInput = ref('');
         const assetInAmountInput = ref('');
         const assetOutAddressInput = ref('');
         const assetOutAmountInput = ref('');
+        const assetMintAddress = ref('');
+        const assetMintAmount = ref('');
         const slippage = ref(0);
         const transactionPending = ref(false);
         const swapsLoading = ref(false);
@@ -168,11 +232,33 @@ export default defineComponent({
             }
         });
 
+        const mintAsset = computed(() => {
+            const assets = store.getters['assets/metadata'];
+            let asset = assets[Object.keys(assets)[0]];
+            if (isAddress(assetMintAddress.value)) {
+                asset = assets[assetMintAddress.value];
+            }
+            console.log(assets);
+
+            return asset;
+        });
+
+        const mintButtonDisabled = computed(() => {
+            return assetMintAmount.value === ''
+            || assetMintAmount.value === '0'
+            || transactionPending.value;
+        });
+
         onMounted(async () => {
             const { assetIn, assetOut } = getInitialPair();
             await fetchAssetMetadata(assetIn, assetOut);
             assetInAddressInput.value = assetIn;
             assetOutAddressInput.value = assetOut;
+
+            const assets = store.getters['assets/metadata'];
+            const asset = assets[Object.keys(assets)[0]];
+            assetMintAddress.value = asset.address;
+
             initSor();
         });
 
@@ -210,6 +296,10 @@ export default defineComponent({
             onAmountChange(amount);
         }
 
+        function handleMintAmountChange(amount: string): void {
+            assetMintAmount.value = amount;
+        }
+
         function handleAssetSelect(assetAddress: string): void {
             const assetModalKey = store.state.ui.modal.asset.key;
             if (assetModalKey === 'input') {
@@ -218,6 +308,13 @@ export default defineComponent({
             if (assetModalKey === 'output') {
                 assetOutAddressInput.value = assetAddress;
             }
+            if (assetModalKey === 'mint') {
+                assetMintAddress.value = assetAddress;
+            }
+        }
+
+        function toggleSwapping(): void {
+            swapping.value = !swapping.value;
         }
 
         async function unlock(): Promise<void> {
@@ -491,12 +588,24 @@ export default defineComponent({
             return false;
         }
 
+        async function mintToken(): Promise<void> {
+            transactionPending.value = true;
+            const provider = await store.getters['account/provider'];
+            await Helper.mintToken(provider, assetMintAddress.value, assetMintAmount.value);
+            assetMintAmount.value = '';
+            transactionPending.value = false;
+        }
+
         return {
+            swapping,
+
             isExactIn,
             assetInAddressInput,
             assetInAmountInput,
             assetOutAddressInput,
             assetOutAmountInput,
+            assetMintAddress,
+            assetMintAmount,
 
             pools,
             swaps,
@@ -507,11 +616,16 @@ export default defineComponent({
             transactionPending,
             swapsLoading,
             isModalOpen,
+            mintAsset,
+            mintButtonDisabled,
 
             handleAmountChange,
             handleAssetSelect,
+            handleMintAmountChange,
             unlock,
             swap,
+            toggleSwapping,
+            mintToken,
         };
     },
 });
@@ -522,7 +636,8 @@ export default defineComponent({
     flex-direction: column;
 }
 
-.pair {
+.pair,
+.minting {
     margin: 20px;
     padding: 40px 40px;
     display: flex;
@@ -543,7 +658,34 @@ export default defineComponent({
 }
 
 .header-text {
+    display: flex;
+
     font-size: var(--font-size-header);
+
+    background: var(--background-control);
+
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-medium);
+}
+
+.header-toggle-option {
+    padding: 5px 10px;
+}
+
+.header-toggle-option-selected {
+    background: var(--background-hightlight);
+
+    border-radius: var(--border-radius-medium);
+}
+
+.header-text-secondary {
+    color: var(--text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.header-text-secondary:hover {
+    color: var(--text-hightlight);
 }
 
 .validation-message {
