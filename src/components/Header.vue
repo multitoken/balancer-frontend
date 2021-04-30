@@ -10,6 +10,7 @@
                     :title="'brand'"
                 />
                 <span class="title">Multitoken</span>
+                <span class="alpha-warning">Alpha</span>
             </router-link>
             <a
                 v-if="isDev"
@@ -37,8 +38,7 @@
             </div>
         </div>
         <div class="header-middle">
-            <span>Alpha version</span>
-            <span>Kovan network</span>
+            <span v-text="networkName" />
         </div>
         <div class="header-right">
             <Icon
@@ -52,12 +52,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, capitalize } from 'vue';
 
 import Storage from '@/utils/storage';
 
 import Account from '@/components/Account.vue';
 import Icon from '@/components/Icon.vue';
+import config from '@/config';
+import provider from '@/utils/provider';
 
 export default defineComponent({
     components: {
@@ -74,8 +76,108 @@ export default defineComponent({
             `https://github.com/multitoken/balancer-frontend/commit/${commit.value}`,
         );
 
+        const chainParams = {
+            mainnet: {
+                chainId: '0x1',
+                chainName: 'Ethereum',
+                nativeCurrency: {
+                    name: 'Ethereum',
+                    symbol: 'ETH',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://mainnet.infura.io/v3'],
+                blockExplorerUrls: ['https://etherscan.io'],
+            },
+            kovan: {
+                chainId: '0x2a',
+                chainName: 'Kovan',
+                nativeCurrency: {
+                    name: 'Ethereum',
+                    symbol: 'ETH',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://kovan.infura.io/v3'],
+                blockExplorerUrls: ['https://kovan.etherscan.io'],
+            },
+            fantom: {
+                chainId: '0xfa',
+                chainName: 'Fantom',
+                nativeCurrency: {
+                    name: 'Fantom',
+                    symbol: 'FTM',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://rpcapi.fantom.network'],
+                blockExplorerUrls: ['https://ftmscan.com'],
+            },
+            bsc: {
+                chainId: '0x38',
+                chainName: 'BSC',
+                nativeCurrency: {
+                    name: 'Binance Coin',
+                    symbol: 'BNB',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://bsc-dataseed.binance.org'],
+                blockExplorerUrls: ['https://bscscan.com'],
+            },
+            matic: {
+                chainId: '0x89',
+                chainName: 'Matic',
+                nativeCurrency: {
+                    name: 'Matic',
+                    symbol: 'MATIC',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
+                blockExplorerUrls: ['https://explorer-mainnet.maticvigil.com'],
+            },
+            heco: {
+                chainId: '0x80',
+                chainName: 'Heco',
+                nativeCurrency: {
+                    name: 'Heco Token',
+                    symbol: 'HT',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://http-mainnet.hecochain.com'],
+                blockExplorerUrls: ['https://hecoinfo.com'],
+            },
+            xdai: {
+                chainId: '0x64',
+                chainName: 'xDai',
+                nativeCurrency: {
+                    name: 'xDai Token',
+                    symbol: 'xDai',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://rpc.xdaichain.com'],
+                blockExplorerUrls: ['https://blockscout.com/poa/xdai'],
+            },
+            harmony: {
+                chainId: '0x63564C40',
+                chainName: 'Harmony One',
+                nativeCurrency: {
+                    name: 'One Token',
+                    symbol: 'ONE',
+                    decimals: 18,
+                },
+                rpcUrls: ['https://api.s0.t.hmny.io'],
+                blockExplorerUrls: ['https://explorer.harmony.one/'],
+            },
+        };
+
         const mode = ref(Storage.isDarkmode());
         const modeLogo = computed(() => getLogo(mode.value));
+        const networkName = computed(() => {
+            console.log(provider);
+            console.log(window.ethereum);
+            if (chainParams['kovan'].chainId !== provider.network.name) {
+                return 'Please select Kovan network in Metamask';
+            } else {
+                return `${capitalize(config.network)} network`;
+            }
+        });
 
         function toggleMode(): void {
             mode.value = Storage.toggleMode();
@@ -96,6 +198,8 @@ export default defineComponent({
             commitLink,
 
             modeLogo,
+            networkName,
+
             toggleMode,
         };
     },
@@ -130,6 +234,8 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
 
+    text-align: center;
+
     color: #ffa600;
 }
 
@@ -150,13 +256,21 @@ a {
 }
 
 .logo {
-    height: 32px;
-    width: 40px;
+    width: 50px;
 }
 
 .title {
     margin-left: 12px;
     font-size: var(--font-size-large);
+}
+
+.alpha-warning {
+    position: relative;
+
+    top: -10px;
+
+    font-size: var(--font-size-small);
+    color: #f00;
 }
 
 .commit-label {
