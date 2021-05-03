@@ -30,10 +30,10 @@
                 </div>
                 <a
                     class="link"
-                    href="https://pools.multitoken.finance/"
+                    href="https://etfs.multitoken.com/"
                     target="_blank"
                 >
-                    Invest
+                    ETFs
                 </a>
             </div>
         </div>

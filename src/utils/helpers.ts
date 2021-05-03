@@ -73,7 +73,7 @@ export function getAccountLink(address: string): string {
 }
 
 export function getPoolLink(pool: string): string {
-    const link = `https://pools.multitoken.finance/#/pool/${pool}`;
+    const link = `https://etfs.multitoken.com/#/pool/${pool}`;
     return link;
 }
 
