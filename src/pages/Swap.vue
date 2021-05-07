@@ -12,6 +12,7 @@
                         Swap
                     </div>
                     <div
+                        v-if="chainParams['kovan'].chainName.toLowerCase() == provider.network.name"
                         class="header-text-secondary header-toggle-option"
                         @click="toggleSwapping"
                     >
@@ -132,6 +133,7 @@ import SwapPair from '@/components/swap/Pair.vue';
 import Button from '@/components/Button.vue';
 import AssetInput from '@/components/AssetInput.vue';
 import { setGoal } from '@/utils/fathom';
+import chainParams from '@/utils/chainParams.json';
 
 // eslint-disable-next-line no-undef
 const GAS_PRICE = process.env.APP_GAS_PRICE || '100000000000';
@@ -626,6 +628,9 @@ export default defineComponent({
             swap,
             toggleSwapping,
             mintToken,
+
+            chainParams,
+            provider,
         };
     },
 });

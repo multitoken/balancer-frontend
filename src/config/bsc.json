@@ -1,0 +1,22 @@
+{
+    "network": "bsc",
+    "chainId": 56,
+    "precision": 6,
+    "infuraKey": "8dd19a9306014b30bb8e994bbf21211c",
+    "alchemyKey": "cQGZUiTLRCFsQS7kbRxPJK4eH4fTTu88",
+    "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
+    "addresses": {
+        "bFactory": "0xebCAA6318d834b69CB4ADD6467583a12F348fd5c",
+        "bActions": "0xd631704FD9582edF70eC5f0dD13013Afe8a7D0e8",
+        "dsProxyRegistry": "0xCe150D83E291c44f85771360B067e68730294484",
+        "exchangeProxy": "0x4D9289412338bb55DEC6FA770c51804349f7ae78",
+        "wbnb": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "multicall": "0x41263cBA59EB80dC200F3E2544eda4ed6A90E76C"
+    },
+    "connectors": {
+        "injected": {
+            "id": "injected",
+            "name": "MetaMask"
+        }
+    }
+}
