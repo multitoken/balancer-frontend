@@ -38,17 +38,14 @@
             </div>
         </div>
         <div class="network-container">
-            <a
+            <Button
                 v-for="(chain, i) in chains"
                 :key="i"
-                :href="getNetworkURL(chain)"
-            >
-                <Button
-                    :primary="true"
-                    :disabled="chain === currentNetwork"
-                    v-text="chainParams[chain].chainName"
-                />
-            </a>
+                :primary="true"
+                :disabled="chainParams[chain].chainId != walletChain"
+                :non-clickable="true"
+                v-text="chainParams[chain].chainName"
+            />
         </div>
         <div
             v-if="walletChain !== `0x${provider.network.chainId.toString(16)}`"
