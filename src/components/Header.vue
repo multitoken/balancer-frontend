@@ -47,12 +47,6 @@
                 v-text="chainParams[chain].chainName"
             />
         </div>
-        <div
-            v-if="walletChain !== `0x${provider.network.chainId.toString(16)}`"
-            class="header-middle"
-        >
-            <span v-text="networkName" />
-        </div>
         <div class="header-right">
             <Icon
                 class="mode-icon"
@@ -65,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, capitalize } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 
 import Storage from '@/utils/storage';
 
@@ -94,20 +88,9 @@ export default defineComponent({
 
         const chains = ['mainnet', 'kovan', 'bsc'];
 
-        const walletChain = window.ethereum.chainId;
-
         const mode = ref(Storage.isDarkmode());
         const modeLogo = computed(() => getLogo(mode.value));
-        const networkName = computed(() => {
-            console.log(provider);
-            console.log(window.ethereum);
-            if (chainParams['kovan'].chainId !== provider.network.name) {
-                return 'Please select Kovan network in Metamask';
-            } else {
-                return `${capitalize(config.network)} network`;
-            }
-        });
-        const currentNetwork = computed(() => config.network );
+        const walletChain = window.ethereum.chainId;
 
         function toggleMode(): void {
             mode.value = Storage.toggleMode();
@@ -131,13 +114,11 @@ export default defineComponent({
             commitLabel,
             commitLink,
             chainParams,
-            walletChain,
 
             chains,
 
             modeLogo,
-            networkName,
-            currentNetwork,
+            walletChain,
 
             toggleMode,
             getNetworkURL,
@@ -162,22 +143,6 @@ export default defineComponent({
 .header-left {
     display: flex;
     align-items: center;
-}
-
-.header-middle {
-    position: absolute;
-    left: calc(50% - 60px);
-    
-    width: 120px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    text-align: center;
-
-    color: #ffa600;
 }
 
 .header-right {
@@ -256,30 +221,5 @@ a {
 
 .account {
     margin: 0 16px;
-}
-
-@media only screen and (max-width: 768px) {
-    .header-middle {
-        left: 70px;
-    }
-
-    .brand {
-        margin-left: 16px;
-    }
-
-    .title,
-    .commit-label,
-    .link {
-        display: none;
-    }
-}
-
-@media (max-width: 416px) {
-    .header-middle {
-        position: absolute;
-        bottom: 180px;
-        right: 20px;
-        left: unset;
-    }
 }
 </style>
