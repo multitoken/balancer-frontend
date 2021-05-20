@@ -380,7 +380,7 @@ export default defineComponent({
 
         async function initSor(): Promise<void> {
             // const poolsUrl = `${config.subgraphBackupUrl}?timestamp=${Date.now()}`;
-            const poolsUrl = '/pools';
+            const poolsUrl = '/not-finalizesd-pools';
             sor = new SOR(
                 provider,
                 new BigNumber(GAS_PRICE),

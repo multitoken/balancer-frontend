@@ -5,6 +5,10 @@ const GARAPH_PATH = '/subgraphs/name/cron-md/multitoken';
 const QUERY = "query { pools (where: {active: true, tokensCount_gt: 1, finalized: true, tokensList_not: []}, first: 20, skip: 0, orderBy: \"liquidity\", orderDirection: \"desc\") { id publicSwap finalized crp rights swapFee totalWeight totalShares totalSwapVolume liquidity tokensList swapsCount tokens (orderBy: \"denormWeight\", orderDirection: \"desc\") { id address balance decimals symbol denormWeight } swaps (first: 1, orderBy: \"timestamp\", orderDirection: \"desc\", where: {timestamp_lt: 1618488000}) { poolTotalSwapVolume } } }";
 const NOT_FINALIZED_QUERY = "query { pools (where: {active: true, tokensCount_gt: 1, tokensList_not: []}, first: 20, skip: 0, orderBy: \"liquidity\", orderDirection: \"desc\") { id publicSwap finalized crp rights swapFee totalWeight totalShares totalSwapVolume liquidity tokensList swapsCount tokens (orderBy: \"denormWeight\", orderDirection: \"desc\") { id address balance decimals symbol denormWeight } swaps (first: 1, orderBy: \"timestamp\", orderDirection: \"desc\", where: {timestamp_lt: 1618488000}) { poolTotalSwapVolume } } }";
 
+const excludedPoolsIds = [
+    '0x1e7967bfab4c2050d15707136fbb2812476f0cfb',
+    '0x03544dc2d0900bcef3bc09969e3ed5044ab2c802',
+];
 
 var app = express();
 
@@ -53,7 +57,8 @@ function queryGraph(query) {
           })
           tres.on('end', () => {
               let data = JSON.parse(Buffer.concat(chunks).toString('utf8'));
-              resolve(JSON.stringify(data['data']));
+              // resolve(JSON.stringify(data['data']));
+              resolve(data['data']);
           })
         })
         
@@ -66,15 +71,25 @@ function queryGraph(query) {
     });
 }
 
+function filterPools(data) {
+    if (!data.pools) {
+        return data;
+    }
+
+    return {
+        pools: data.pools.filter(p => { return !(p.id && excludedPoolsIds.indexOf(p.id) >= 0)})
+    }
+}
+
 app.get('/pools', (req, res) => {
     queryGraph(QUERY).then((data) => {
-        res.end(data);
+        res.end(JSON.stringify(filterPools(data)));
     });
 });
 
 app.get('/not-finalizesd-pools', (req, res) => {
     queryGraph(NOT_FINALIZED_QUERY).then((data) => {
-        res.end(data);
+        res.end(JSON.stringify(filterPools(data)));
     });
 });
 
