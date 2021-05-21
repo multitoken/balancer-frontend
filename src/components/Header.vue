@@ -228,8 +228,6 @@ a {
 
 .network-button {
     padding: 1px 10px;
-
-    cursor: default;
 }
 .network-button:hover {
     transform: none !important;
