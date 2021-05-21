@@ -168,7 +168,7 @@ export default defineComponent({
 
         const swapping = ref(true);
 
-        let walletChain = window.ethereum.chainId || '0x2a';
+        let walletChain = window.ethereum.chainId;
 
         const isExactIn = ref(true);
         const assetInAddressInput = ref('');
