@@ -1,5 +1,6 @@
 <template>
     <a
+        v-if="type !== 'info'"
         :href="link"
         target="_blank"
     >

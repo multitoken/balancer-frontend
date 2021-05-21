@@ -75,12 +75,14 @@ export default defineComponent({
     --background-secondary: #fff;
     --background-control: #fff;
     --background-hover: #f5f5f5;
+    --background-mint: linear-gradient(185deg, #98ffcc 0%, #98ff98 100%);
+    --background-mint-dark: linear-gradient(185deg, #62a584 0%, #61a861 100%);
     --border: #e5e5e5;
     --text-primary: #21222c;
     --text-secondary: #718b98;
     --text-hightlight: #98ff98;
     --success: #21b66f;
-    --info: #7685d5;
+    --info: #528852;
     --warning: #ff9a1a;
     --error: #ff5b4c;
     --font-size-tiny: 11px;
