@@ -9,7 +9,7 @@
                     class="logo"
                     :title="'brand'"
                 />
-                <span class="title">Multitoken</span>
+                <span class="title">Multitoken V1</span>
                 <span class="alpha-warning">Alpha</span>
             </router-link>
             <a
