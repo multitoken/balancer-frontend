@@ -4,6 +4,12 @@
         class="page"
     >
         <div class="pair">
+            <div
+                v-if="walletChain != `0x${provider.network.chainId.toString(16)}`"
+                class="kovan-warning"
+            >
+                <span v-text="networkWarning" />
+            </div>
             <div class="header">
                 <div
                     class="header-text"
@@ -12,6 +18,7 @@
                         Swap
                     </div>
                     <div
+                        v-if="chainParams['kovan'].chainId == walletChain"
                         class="header-text-secondary header-toggle-option"
                         @click="toggleSwapping"
                     >
@@ -105,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, onMounted, watch, computed } from 'vue';
+import { ref, defineComponent, onMounted, watch, computed, capitalize } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { useIntervalFn } from '@vueuse/core';
@@ -132,6 +139,7 @@ import SwapPair from '@/components/swap/Pair.vue';
 import Button from '@/components/Button.vue';
 import AssetInput from '@/components/AssetInput.vue';
 import { setGoal } from '@/utils/fathom';
+import chainParams from '@/utils/chainParams.json';
 
 // eslint-disable-next-line no-undef
 const GAS_PRICE = process.env.APP_GAS_PRICE || '100000000000';
@@ -159,6 +167,8 @@ export default defineComponent({
         const store = useStore<RootState>();
 
         const swapping = ref(true);
+
+        const walletChain = window.ethereum.chainId;
 
         const isExactIn = ref(true);
         const assetInAddressInput = ref('');
@@ -238,7 +248,6 @@ export default defineComponent({
             if (isAddress(assetMintAddress.value)) {
                 asset = assets[assetMintAddress.value];
             }
-            console.log(assets);
 
             return asset;
         });
@@ -247,6 +256,14 @@ export default defineComponent({
             return assetMintAmount.value === ''
             || assetMintAmount.value === '0'
             || transactionPending.value;
+        });
+
+        const networkWarning = computed(() => {
+            if (chainParams['kovan'].chainId !== walletChain) {
+                return 'Please select Kovan network in Metamask';
+            } else {
+                return `${capitalize(config.network)} network`;
+            }
         });
 
         onMounted(async () => {
@@ -598,6 +615,7 @@ export default defineComponent({
 
         return {
             swapping,
+            walletChain,
 
             isExactIn,
             assetInAddressInput,
@@ -618,6 +636,7 @@ export default defineComponent({
             isModalOpen,
             mintAsset,
             mintButtonDisabled,
+            networkWarning,
 
             handleAmountChange,
             handleAssetSelect,
@@ -626,6 +645,9 @@ export default defineComponent({
             swap,
             toggleSwapping,
             mintToken,
+
+            chainParams,
+            provider,
         };
     },
 });
@@ -638,14 +660,26 @@ export default defineComponent({
 
 .pair,
 .minting {
+    position: relative;
+
     margin: 20px;
     padding: 40px 40px;
+
     display: flex;
     flex-direction: column;
+    align-items: center;
+
     border: 1px solid var(--border);
     border-radius: var(--border-radius-large);
     background: var(--background-secondary);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.kovan-warning {
+    position: absolute;
+    top: 10px;
+
+    color: #ffa600;
 }
 
 .header {

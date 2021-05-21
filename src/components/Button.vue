@@ -55,7 +55,7 @@ button:hover {
 }
 
 button.primary {
-    background: linear-gradient(185deg, #98ffcc 0%, #98ff98 100%);
+    background: var(--background-mint);
     color: var(--background-secondary);
 }
 

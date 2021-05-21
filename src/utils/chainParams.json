@@ -1,0 +1,90 @@
+{
+    "mainnet": {
+        "chainId": "0x1",
+        "chainName": "Ethereum",
+        "nativeCurrency": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://mainnet.infura.io/v3"],
+        "blockExplorerUrls": ["https://etherscan.io"]
+    },
+    "kovan": {
+        "chainId": "0x2a",
+        "chainName": "Kovan",
+        "nativeCurrency": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://kovan.infura.io/v3"],
+        "blockExplorerUrls": ["https://kovan.etherscan.io"]
+    },
+    "fantom": {
+        "chainId": "0xfa",
+        "chainName": "Fantom",
+        "nativeCurrency": {
+            "name": "Fantom",
+            "symbol": "FTM",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://rpcapi.fantom.network"],
+        "blockExplorerUrls": ["https://ftmscan.com"]
+    },
+    "bsc": {
+        "chainId": "0x38",
+        "chainName": "BSC",
+        "nativeCurrency": {
+            "name": "Binance Coin",
+            "symbol": "BNB",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://bsc-dataseed.binance.org"],
+        "blockExplorerUrls": ["https://bscscan.com"]
+    },
+    "matic": {
+        "chainId": "0x89",
+        "chainName": "Matic",
+        "nativeCurrency": {
+            "name": "Matic",
+            "symbol": "MATIC",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://rpc-mainnet.maticvigil.com"],
+        "blockExplorerUrls": ["https://explorer-mainnet.maticvigil.com"]
+    },
+    "heco": {
+        "chainId": "0x80",
+        "chainName": "Heco",
+        "nativeCurrency": {
+            "name": "Heco Token",
+            "symbol": "HT",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://http-mainnet.hecochain.com"],
+        "blockExplorerUrls": ["https://hecoinfo.com"]
+    },
+    "xdai": {
+        "chainId": "0x64",
+        "chainName": "xDai",
+        "nativeCurrency": {
+            "name": "xDai Token",
+            "symbol": "xDai",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://rpc.xdaichain.com"],
+        "blockExplorerUrls": ["https://blockscout.com/poa/xdai"]
+    },
+    "harmony": {
+        "chainId": "0x63564C40",
+        "chainName": "Harmony One",
+        "nativeCurrency": {
+            "name": "One Token",
+            "symbol": "ONE",
+            "decimals": 18
+        },
+        "rpcUrls": ["https://api.s0.t.hmny.io"],
+        "blockExplorerUrls": ["https://explorer.harmony.one/"]
+    }
+}

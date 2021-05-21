@@ -149,6 +149,7 @@ const actions = {
             provider.on('chainChanged', async () => {
                 commit('clear');
                 dispatch('saveProvider', provider);
+                window.location.reload();
             });
             provider.on('accountsChanged', async () => {
                 commit('clear');
