@@ -41,9 +41,10 @@
             <Button
                 v-for="(chain, i) in chains"
                 :key="i"
-                :primary="true"
+                :primary="chainParams[chain].chainId == walletChain"
                 :disabled="chainParams[chain].chainId != walletChain"
                 :non-clickable="true"
+                class="network-button"
                 v-text="chainParams[chain].chainName"
             />
         </div>
@@ -204,13 +205,22 @@ a {
 .network-container {
     position: absolute;
 
-    left: calc(50% - 125px);
+    left: calc(50% - 135px);
 
-    width: 250px;
+    width: 270px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.network-button {
+    padding: 1px 10px;
+
+    cursor: default;
+}
+.network-button:hover {
+    transform: none !important;
 }
 
 .mode-icon {
