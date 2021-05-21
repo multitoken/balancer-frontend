@@ -673,7 +673,9 @@ export default defineComponent({
 }
 
 .header-toggle-option-selected {
-    background: var(--background-hightlight);
+    color: var(--background-secondary);
+
+    background: var(--background-mint);
 
     border-radius: var(--border-radius-medium);
 }
