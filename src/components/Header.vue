@@ -110,7 +110,7 @@ export default defineComponent({
         }
         
         function test(chainName: string): void {
-            if (chainName === 'mainnet') {
+            if (chainName === 'mainnet' || chainName === 'bsc') {
                 store.dispatch('ui/notify', {
                     text: 'Coming soon',
                     type: 'info',
