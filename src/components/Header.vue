@@ -41,8 +41,8 @@
             <Button
                 v-for="(chain, i) in chains"
                 :key="i"
-                :primary="chainParams[chain].chainId == walletChain"
-                :disabled="chainParams[chain].chainId != walletChain"
+                :primary="chainParams[chain].chainId == `0x${config.chainId.toString(16)}`"
+                :disabled="chainParams[chain].chainId != `0x${config.chainId.toString(16)}`"
                 :non-clickable="true"
                 class="network-button"
                 v-text="chainParams[chain].chainName"
@@ -106,11 +106,9 @@ export default defineComponent({
             return isDarkmode ? 'moon' : 'sun';
         }
 
-        function getNetworkURL(chainName: string): string {
-            return config.urls![chainName.toLowerCase()];
-        }
-
         return {
+            config,
+
             isDev,
             commitLabel,
             commitLink,
@@ -122,7 +120,6 @@ export default defineComponent({
             walletChain,
 
             toggleMode,
-            getNetworkURL,
             provider,
         };
     },
