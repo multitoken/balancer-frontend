@@ -42,9 +42,9 @@
                 v-for="(chain, i) in chains"
                 :key="i"
                 :primary="chainParams[chain].chainId == `0x${config.chainId.toString(16)}`"
-                :disabled="chainParams[chain].chainId != `0x${config.chainId.toString(16)}`"
                 :non-clickable="true"
                 class="network-button"
+                @click="test(chain)"
                 v-text="chainParams[chain].chainName"
             />
         </div>
@@ -70,6 +70,8 @@ import Icon from '@/components/Icon.vue';
 import config from '@/config';
 import provider from '@/utils/provider';
 import chainParams from '@/utils/chainParams.json';
+import { useStore } from 'vuex';
+import { RootState } from '@/store';
 
 export default defineComponent({
     components: {
@@ -78,6 +80,7 @@ export default defineComponent({
         Icon,
     },
     setup() {
+        const store = useStore<RootState>();
         // eslint-disable-next-line no-undef
         const isDev = ref(process.env.APP_ENV === 'dev');
         // eslint-disable-next-line no-undef
@@ -105,6 +108,16 @@ export default defineComponent({
         function getLogo(isDarkmode: boolean): string {
             return isDarkmode ? 'moon' : 'sun';
         }
+        
+        function test(chainName: string): void {
+            if (chainName === 'mainnet') {
+                store.dispatch('ui/notify', {
+                    text: 'Coming soon',
+                    type: 'info',
+                });
+            }
+            return;
+        }
 
         return {
             config,
@@ -121,6 +134,8 @@ export default defineComponent({
 
             toggleMode,
             provider,
+
+            test,
         };
     },
 });
