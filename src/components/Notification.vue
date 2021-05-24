@@ -39,7 +39,7 @@
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { TransitionPresets, useTransition } from '@vueuse/core';
 
-import { NOTIFICATION_DURATION } from '@/store/modules/ui';
+import { NOTIFICATION_DURATION, SHORT_NOTIFICATION_DURATION } from '@/store/modules/ui';
 
 import Icon from '@/components/Icon.vue';
 import NotificationButton from '@/components/NotificationButton.vue';
@@ -67,7 +67,7 @@ export default defineComponent({
         const totalProgress = ref(0);
 
         const progress = useTransition(totalProgress, {
-            duration: NOTIFICATION_DURATION,
+            duration: props.type === 'info' ? SHORT_NOTIFICATION_DURATION : NOTIFICATION_DURATION,
             transition: TransitionPresets.linear,
         });
 
@@ -140,6 +140,12 @@ export default defineComponent({
 }
 
 .info {
+    position: fixed;
+    top: 0;
+    left: calc(50% - 140px);
+
+    margin-top: 5px;
+
     background: var(--background-mint-dark);
 }
 
