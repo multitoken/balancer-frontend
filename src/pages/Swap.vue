@@ -168,7 +168,7 @@ export default defineComponent({
 
         const swapping = ref(true);
 
-        const walletChain = window.ethereum.chainId;
+        let walletChain = window.ethereum.chainId;
 
         const isExactIn = ref(true);
         const assetInAddressInput = ref('');
@@ -267,6 +267,7 @@ export default defineComponent({
         });
 
         onMounted(async () => {
+            setTimeout(() => walletChain = window.ethereum.chainId, 200);
             const { assetIn, assetOut } = getInitialPair();
             await fetchAssetMetadata(assetIn, assetOut);
             assetInAddressInput.value = assetIn;
